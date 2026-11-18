@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>業務自動化ポートフォリオ｜櫻 梓</title>
+<meta name="description" content="シフト作成・予約受付・在庫管理・SNS月次レポート・経理を、いつものGoogleスプレッドシートで自動化。小さなお店と会社の事務のおてつだいをしています。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="業務自動化ポートフォリオ｜櫻 梓">
+<meta property="og:description" content="シフト作成・予約受付・在庫管理・SNS月次レポート・経理を、いつものGoogleスプレッドシートで自動化します。">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://office-sakura-a.github.io/">
+<link rel="canonical" href="https://office-sakura-a.github.io/">
+<meta name="theme-color" content="#f4f6ee">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='%23f3dcd4'%3E%3Cellipse cx='20' cy='9' rx='7' ry='9'/%3E%3Cellipse cx='20' cy='9' rx='7' ry='9' transform='rotate(72 20 20)'/%3E%3Cellipse cx='20' cy='9' rx='7' ry='9' transform='rotate(144 20 20)'/%3E%3Cellipse cx='20' cy='9' rx='7' ry='9' transform='rotate(216 20 20)'/%3E%3Cellipse cx='20' cy='9' rx='7' ry='9' transform='rotate(288 20 20)'/%3E%3C/g%3E%3Ccircle cx='20' cy='20' r='5' fill='%23e9cf5f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Klee+One:wght@600&display=swap">
+<style>
+/* 森の小道：やわらかな丘の形と草花のイラストの間を、上から下へ歩いていく縦の構成 */
+:root {
+  --paper: #f4f6ee;
+  --paper-2: #e7eedc;
+  --moss: #2f4a3a;
+  --sage: #8fae8b;
+  --fern: #4f7a5a;
+  --mimosa: #e9cf5f;
+  --petal: #f3dcd4;
+  --ink-soft: #5d6f62;
+  --card: #fbfcf7;
+  --line: #d3dcc6;
+  --display: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Hiragino Sans", sans-serif;
+  --body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --hand: "Klee One", "Hiragino Mincho ProN", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #18231d; --paper-2: #22322a; --moss: #e4ecdf; --sage: #6f9273; --fern: #a9d0a8;
+    --mimosa: #e3c75a; --petal: #6b4f4b; --ink-soft: #a8b9ab; --card: #1f2c25; --line: #34483c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #18231d; --paper-2: #22322a; --moss: #e4ecdf; --sage: #6f9273; --fern: #a9d0a8;
+  --mimosa: #e3c75a; --petal: #6b4f4b; --ink-soft: #a8b9ab; --card: #1f2c25; --line: #34483c;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+img { max-width: 100%; }
+html { color-scheme: light; }
+body {
+  margin: 0;
+  background: var(--paper); color: var(--moss);
+  font-family: var(--body); font-size: 16px; line-height: 1.9; letter-spacing: .03em;
+  overflow-x: hidden;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.45; }
+p { margin: 0; }
+a { color: var(--fern); }
+a:focus-visible, .btn:focus-visible { outline: 3px solid var(--mimosa); outline-offset: 3px; }
+svg.deco { position: absolute; pointer-events: none; overflow: visible; }
+
+/* ---------- ヒーロー ---------- */
+.hero { position: relative; overflow: hidden; padding-block: 72px 96px; }
+.hill { position: absolute; background: var(--paper-2); border-radius: 58% 42% 63% 37% / 46% 55% 45% 54%; }
+.hill.a { width: 620px; height: 460px; right: -160px; top: -120px; }
+.hill.b { width: 420px; height: 300px; left: -180px; bottom: -150px; background: var(--petal); opacity: .45; border-radius: 42% 58% 36% 64% / 55% 40% 60% 45%; }
+.hero .wrap { position: relative; display: grid; grid-template-columns: 1.15fr .85fr; gap: 32px; align-items: center; }
+.eyebrow { font-family: var(--hand); color: var(--fern); font-size: 15px; letter-spacing: .12em; }
+.hero h1 { font-size: clamp(30px, 5.4vw, 52px); font-weight: 900; margin-top: 10px; }
+.hero h1 em { font-style: normal; background: linear-gradient(transparent 62%, var(--mimosa) 62%); padding: 0 2px; }
+.nb { display: inline-block; }
+.hero .lead { margin-top: 22px; max-width: 34em; color: var(--ink-soft); }
+.garden { position: relative; height: 340px; }
+.garden svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ---------- セクション共通 ---------- */
+section { position: relative; padding-block: 64px; }
+.sec-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
+.sec-head .en { font-family: var(--hand); color: var(--sage); font-size: 18px; letter-spacing: .1em; }
+.sec-head h2 { font-size: clamp(22px, 3.2vw, 30px); font-weight: 700; }
+
+/* 作業時間 */
+.time { background: var(--card); border-radius: 28px; padding: 24px clamp(16px, 4vw, 40px); max-width: 760px; }
+.time table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.time th, .time td { padding: 12px 8px; text-align: left; border-bottom: 1px dashed var(--line); }
+.time thead th { font-size: 13px; color: var(--ink-soft); font-weight: 500; letter-spacing: .1em; }
+.time td.after { font-weight: 700; color: var(--fern); }
+.time tr:last-child td { border-bottom: 0; }
+.time caption { caption-side: top; text-align: left; font-family: var(--display); font-weight: 700; font-size: 17px; padding-bottom: 6px; }
+.time .note { font-size: 12px; color: var(--ink-soft); }
+.time { max-width: 900px; }
+.table-scroll { overflow-x: auto; }
+.time table { min-width: 560px; }
+.time td.money { font-family: var(--display); font-weight: 900; font-size: 18px; color: var(--moss); background: linear-gradient(transparent 60%, var(--mimosa) 60%); background-size: 100% 100%; white-space: nowrap; }
+.time td, .time th { white-space: nowrap; }
+.time td:first-child { white-space: normal; }
+.calc { margin-top: 10px; font-size: 12px; color: var(--ink-soft); line-height: 1.7; }
+.block.risk p { font-size: 14px; color: var(--ink-soft); }
+.monitor { display: inline-block; margin-top: 18px; padding: 6px 18px; border-radius: 999px; background: var(--mimosa); color: #2f4a3a; font-weight: 700; font-size: 14px; }
+
+/* 自己紹介 */
+.about { display: grid; grid-template-columns: 220px 1fr; gap: 36px; align-items: start; }
+.about-mark { position: relative; aspect-ratio: 1; max-width: 220px; width: 100%; background: var(--paper-2); border-radius: 47% 53% 41% 59% / 52% 44% 56% 48%; display: grid; place-items: center; }
+.about-mark svg { width: 64%; height: 64%; }
+.about p { max-width: 38em; }
+.about .myname { font-family: var(--display); font-weight: 700; font-size: 20px; letter-spacing: .12em; margin-bottom: 8px; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; padding: 0; list-style: none; }
+.tags li { font-size: 13px; padding: 4px 14px; border-radius: 999px; background: var(--paper-2); color: var(--moss); }
+
+/* 作品 */
+.works { display: grid; gap: 72px; }
+.work { display: grid; grid-template-columns: 1fr 1.25fr; gap: 40px; align-items: start; }
+.work:nth-child(even) .work-text { order: 2; }
+.work-text { min-width: 0; }
+.work .who { font-family: var(--hand); color: var(--fern); font-size: 14px; letter-spacing: .08em; display: flex; align-items: center; gap: 8px; }
+.work .who svg { width: 18px; height: 18px; flex: none; }
+.work h3 { font-size: clamp(21px, 2.8vw, 27px); font-weight: 700; margin-top: 6px; }
+.block { margin-top: 18px; }
+.block h4 { margin: 0 0 4px; font-size: 13px; letter-spacing: .14em; color: var(--ink-soft); font-weight: 700; }
+.block ul { margin: 0; padding-left: 1.2em; }
+.block li + li { margin-top: 4px; }
+.block.effect p { background: var(--card); border-radius: 16px; padding: 12px 16px 12px 22px; position: relative; }
+.block.effect p::before { content: ""; position: absolute; left: 8px; top: 22px; width: 8px; height: 8px; border-radius: 50%; background: var(--mimosa); }
+.links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 20px; border-radius: 999px; font-size: 14px; font-weight: 700; text-decoration: none; border: 1.5px solid var(--fern); color: var(--fern); background: transparent; transition: background .2s, color .2s; }
+.btn:hover { background: var(--paper-2); }
+.btn.fill { background: var(--fern); color: var(--paper); }
+.btn.fill:hover { background: var(--moss); }
+
+.shots { min-width: 0; display: grid; gap: 14px; position: relative; }
+.shots.duo { grid-template-columns: 1.4fr 1fr; align-items: start; }
+.shots.duo.narrow-first { grid-template-columns: 1fr 1.6fr; }
+.shot { margin: 0; background: var(--card); border-radius: 18px; padding: 10px; box-shadow: 0 10px 30px -18px rgba(47, 74, 58, .45); }
+.shot img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); }
+.shot figcaption { font-size: 12px; color: var(--ink-soft); padding: 8px 4px 0; line-height: 1.6; }
+.shots .sprig { width: 54px; height: 108px; right: -14px; top: -46px; z-index: 1; }
+
+/* 経理サポート */
+.acct { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+.acct > div { min-width: 0; }
+.acct .intro { max-width: 34em; }
+.acct .note { margin-top: 16px; font-size: 13px; color: var(--ink-soft); }
+.menu-list { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 10px; }
+.menu-list li { background: var(--card); border-radius: 16px; padding: 12px 16px; }
+.menu-list b { display: block; font-family: var(--display); font-size: 16px; }
+.menu-list span { font-size: 14px; color: var(--ink-soft); line-height: 1.7; }
+.case { background: var(--paper-2); border-radius: 28px; padding: 24px clamp(18px, 3vw, 30px); position: relative; }
+.case h3 { font-size: 18px; }
+.case .tag { font-family: var(--hand); color: var(--fern); font-size: 14px; }
+.case ol { margin: 14px 0 0; padding-left: 1.3em; }
+.case li + li { margin-top: 6px; }
+.case .result { margin-top: 16px; background: var(--card); border-radius: 16px; padding: 12px 16px; font-weight: 700; }
+.case .flower { width: 40px; height: 40px; right: 18px; top: -16px; }
+.career { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }
+.soft { margin-top: 22px; }
+.soft h3 { font-size: 16px; }
+.soft ul { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
+.soft li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; border-bottom: 1px dashed var(--line); padding-bottom: 6px; }
+.soft b { font-weight: 700; color: var(--fern); }
+.soft span { font-size: 13px; color: var(--ink-soft); }
+.career li { font-size: 13px; padding: 4px 14px; border-radius: 999px; border: 1px solid var(--line); }
+
+/* 流れ */
+.flow { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; counter-reset: step; }
+.flow li { position: relative; background: var(--card); border-radius: 22px; padding: 22px 18px 20px; counter-increment: step; }
+.flow li::before { content: counter(step); display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--paper-2); font-family: var(--display); font-weight: 900; color: var(--fern); margin-bottom: 10px; }
+.flow h3 { font-size: 17px; }
+.flow p { font-size: 14px; color: var(--ink-soft); margin-top: 6px; line-height: 1.75; }
+
+/* お問い合わせ */
+.contact { position: relative; overflow: hidden; background: var(--paper-2); border-radius: 40px 40px 0 0; margin-top: 40px; padding-block: 64px 80px; }
+.contact .wrap { position: relative; }
+.contact dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 20px; margin: 22px 0 0; }
+.contact dt { font-weight: 700; }
+.contact dd { margin: 0; min-width: 0; }
+.contact .small { margin-top: 28px; font-size: 12px; color: var(--ink-soft); }
+.contact .sprig { width: 80px; height: 160px; right: 6%; bottom: -10px; }
+.contact .flower { width: 46px; height: 46px; right: calc(6% + 70px); bottom: 30px; }
+
+/* 草花の色 */
+.leaf { fill: var(--sage); }
+.leaf-d { fill: var(--fern); }
+.stem { fill: none; stroke: var(--fern); stroke-width: 2.2; stroke-linecap: round; }
+.pt { fill: var(--petal); }
+.pt-w { fill: var(--card); }
+.ctr { fill: var(--mimosa); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .sway { transform-box: fill-box; transform-origin: 50% 100%; animation: sway 6s ease-in-out infinite; }
+  .sway.slow { animation-duration: 8s; animation-delay: -2s; }
+  @keyframes sway { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2.5deg); } }
+}
+
+@media (max-width: 820px) {
+  .hero { padding-block: 48px 40px; }
+  .hero .wrap { grid-template-columns: 1fr; }
+  .garden { height: 220px; }
+  .about { grid-template-columns: 1fr; }
+  .about-mark { max-width: 140px; }
+  .work { grid-template-columns: 1fr; gap: 24px; }
+  .work:nth-child(even) .work-text { order: 0; }
+  .flow { grid-template-columns: 1fr 1fr; }
+  .acct { grid-template-columns: 1fr; }
+  .contact .sprig, .contact .flower { opacity: .5; }
+}
+@media (max-width: 480px) {
+  .shots.duo { grid-template-columns: 1fr; }
+  .flow { grid-template-columns: 1fr; }
+  .hill.a { width: 380px; height: 300px; right: -200px; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="sprig" viewBox="0 0 60 120">
+      <path class="stem" d="M30 118 C31 86 27 50 33 6"/>
+      <ellipse class="leaf" cx="20" cy="88" rx="7" ry="15" transform="rotate(-38 20 88)"/>
+      <ellipse class="leaf-d" cx="41" cy="72" rx="7" ry="15" transform="rotate(40 41 72)"/>
+      <ellipse class="leaf" cx="21" cy="52" rx="6" ry="13" transform="rotate(-36 21 52)"/>
+      <ellipse class="leaf-d" cx="41" cy="36" rx="6" ry="12" transform="rotate(38 41 36)"/>
+      <ellipse class="leaf" cx="33" cy="12" rx="5" ry="10"/>
+    </symbol>
+    <symbol id="flower" viewBox="0 0 40 40">
+      <g class="pt">
+        <ellipse cx="20" cy="9" rx="7" ry="9"/>
+        <ellipse cx="20" cy="9" rx="7" ry="9" transform="rotate(72 20 20)"/>
+        <ellipse cx="20" cy="9" rx="7" ry="9" transform="rotate(144 20 20)"/>
+        <ellipse cx="20" cy="9" rx="7" ry="9" transform="rotate(216 20 20)"/>
+        <ellipse cx="20" cy="9" rx="7" ry="9" transform="rotate(288 20 20)"/>
+      </g>
+      <circle class="ctr" cx="20" cy="20" r="5"/>
+    </symbol>
+    <symbol id="flower-w" viewBox="0 0 40 40">
+      <g class="pt-w">
+        <ellipse cx="20" cy="9" rx="7" ry="9"/>
+        <ellipse cx="20" cy="9" rx="7" ry="9" transform="rotate(72 20 20)"/>
+        <ellipse cx="20" cy="9" rx="7" ry="9" transform="rotate(144 20 20)"/>
+        <ellipse cx="20" cy="9" rx="7" ry="9" transform="rotate(216 20 20)"/>
+        <ellipse cx="20" cy="9" rx="7" ry="9" transform="rotate(288 20 20)"/>
+      </g>
+      <circle class="ctr" cx="20" cy="20" r="5"/>
+    </symbol>
+    <symbol id="bud" viewBox="0 0 20 20">
+      <ellipse class="leaf-d" cx="10" cy="10" rx="5" ry="9" transform="rotate(30 10 10)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="hero">
+  <div class="hill a"></div>
+  <div class="hill b"></div>
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Google スプレッドシートで　業務自動化</p>
+      <h1><span class="nb">毎日の手作業を、</span><br><span class="nb"><em>いつもの</em></span><span class="nb"><em>スプレッドシート</em>で</span><span class="nb">自動化します。</span></h1>
+      <p class="lead">シフト作り、予約の受付、在庫の数え直し、月末のレポート。新しいシステムを入れなくても、Googleスプレッドシートとそれに付いている仕組みで、多くの手作業は減らせます。小さな会社やお店の「人に聞きにくい悩み」まで含めて、一緒に整えます。</p>
+    </div>
+    <div class="garden" aria-hidden="true">
+      <svg viewBox="0 0 400 340">
+        <ellipse cx="210" cy="300" rx="190" ry="34" fill="var(--paper-2)"/>
+        <g class="sway"><use href="#sprig" x="70" y="80" width="110" height="220"/></g>
+        <g class="sway slow"><use href="#sprig" x="190" y="30" width="135" height="270"/></g>
+        <g class="sway"><use href="#sprig" x="290" y="140" width="80" height="160"/></g>
+        <use href="#flower" x="40" y="214" width="58" height="58"/>
+        <use href="#flower-w" x="150" y="240" width="46" height="46"/>
+        <use href="#flower" x="310" y="226" width="50" height="50"/>
+        <use href="#flower-w" x="262" y="96" width="36" height="36"/>
+        <use href="#bud" x="120" y="60" width="22" height="22"/>
+        <use href="#bud" x="340" y="70" width="18" height="18"/>
+        <circle cx="96" cy="40" r="5" fill="var(--mimosa)"/>
+        <circle cx="352" cy="128" r="4" fill="var(--mimosa)"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <div class="time">
+        <div class="table-scroll">
+        <table>
+          <caption>導入でどれだけ時間が減るか <span class="note">（見本の想定）</span></caption>
+          <thead><tr><th scope="col">作業</th><th scope="col">いま</th><th scope="col">導入後</th><th scope="col">1か月で減る時間</th><th scope="col">1年で換算</th></tr></thead>
+          <tbody>
+            <tr><td>月のシフト作成</td><td>1日20分の調整</td><td>ボタン1つ</td><td class="after">約5時間</td><td class="money">約12万円</td></tr>
+            <tr><td>予約の電話受付</td><td>1件5分×月60件</td><td>24時間自動</td><td class="after">約5時間</td><td class="money">約12万円</td></tr>
+            <tr><td>ECごとの在庫合わせ</td><td>1日30分</td><td>スマホで登録</td><td class="after">約10時間</td><td class="money">約24万円</td></tr>
+            <tr><td>SNSの月次レポート</td><td>1社2.5時間×月5社</td><td>1社約10分</td><td class="after">約12時間</td><td class="money">約28万円</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="calc">※1年で換算した金額は、作業する人の時給を2,000円として計算しています（例：シフト　5時間×12か月×2,000円＝12万円）。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><span class="en">Works</span><h2>作品</h2></div>
+      <div class="works">
+
+        <article class="work">
+          <div class="work-text">
+            <p class="who"><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#flower"/></svg>飲食店・小売店・クリニック</p>
+            <h3>シフト自動作成</h3>
+            <div class="block"><h4>悩み</h4><p>シフト作りに毎月時間がかかる。頼みやすい人にばかりシフトが偏り、「希望休を聞いてもらえない」という不満が出る。</p></div>
+            <div class="block"><h4>できること</h4><ul>
+              <li>希望休は持ち点制。1人あたり月5点まで（絶対休み＝2点、できれば休み＝1点、翌月への繰り越しなし）。「言った者勝ち」をなくし、全員が同じ条件で希望を出せる</li>
+              <li>スタッフはスマホの提出ページで日付をタップするだけ。残りの点数が見えて、オーバーすると提出できない。提出した内容はシートに自動で入る</li>
+              <li>必要人数・週の上限日数を守って、ボタン1つで自動作成</li>
+              <li>出勤日数・土日出勤・「希望がかなわなかった回数」が偏らないよう割り振り、バランスチェックで見える化</li>
+            </ul></div>
+            <div class="block effect"><h4>効果</h4><p>作成の手間を減らし、「偏りなく決めている」根拠を数字でスタッフに示せる。</p></div>
+            <div class="block risk"><h4>導入しないと</h4><p>毎月5時間の調整が続き、「あの人ばかり」という不満もたまっていく。</p></div>
+            <div class="links">
+              <a class="btn fill" href="https://script.google.com/macros/s/AKfycbzQm7CTojUAcRQqDFB-lNQUdHvCWUElglCJYIcqSCZB66DVQwZXXpAv42TnGG65ApiPRg/exec" target="_blank" rel="noopener">希望休の提出ページを試す</a>
+              <a class="btn" href="https://docs.google.com/spreadsheets/d/19APidNn0NrGRV_uJk0VinSoK8a-rrXFyo6QRpRk_JuY/edit" target="_blank" rel="noopener">見本のスプレッドシート</a>
+            </div>
+          </div>
+          <div class="shots">
+            <svg class="deco sprig" aria-hidden="true"><use href="#sprig" width="54" height="108"/></svg>
+            <div class="shots duo narrow-first">
+              <figure class="shot"><img src="img/wish-form.png" alt="スマホの希望休提出ページ。カレンダーの日付に×や△がつき、下に残りの持ち点が表示される" width="675" height="786" loading="lazy"><figcaption>スタッフ用の提出ページ（スマホ）</figcaption></figure>
+              <figure class="shot"><img src="img/balance.png" alt="バランスチェックの表。スタッフごとの出勤日数、土日出勤、使った点数と持ち点、希望がかなった割合と判定" width="1175" height="425" loading="lazy"><figcaption>バランスチェック。偏りがないかを数字で確認</figcaption></figure>
+            </div>
+            <figure class="shot"><img src="img/shift.png" alt="自動作成されたシフト表。6人分の12月のシフトが色分けされ、出勤人数と必要人数が下に並ぶ" width="1568" height="299" loading="lazy"><figcaption>自動で作られたシフト表（○＝出勤、×・△＝休み）</figcaption></figure>
+          </div>
+        </article>
+
+        <article class="work">
+          <div class="work-text">
+            <p class="who"><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#flower"/></svg>美容室・サロン・教室</p>
+            <h3>Googleカレンダー連動の予約システム</h3>
+            <div class="block"><h4>悩み</h4><p>営業中に予約の電話が鳴り、手が止まる。予約表への書き写しやダブルブッキングが心配。前日の確認連絡が手間。</p></div>
+            <div class="block"><h4>できること</h4><ul>
+              <li>お客様がスマホで「日付 → メニュー → 空いている時間」を選んで24時間予約</li>
+              <li>空き時間はGoogleカレンダーから自動判定。予約はカレンダーと一覧に自動で記録</li>
+              <li>予約の確認メールと、前日18時のリマインドメールを自動送信</li>
+            </ul></div>
+            <div class="block effect"><h4>効果</h4><p>電話での受付と確認の手間を減らし、無断キャンセルを防ぐ。さらに、24時間気軽に予約できることで新規のお客様が月1〜2人増えれば、客単価6,600円で年間約8〜16万円の売上アップも見込めます。</p></div>
+            <div class="block risk"><h4>導入しないと</h4><p>営業中の電話で手が止まり続け、営業時間外の予約は取りこぼしてしまう。</p></div>
+            <div class="links">
+              <a class="btn fill" href="https://script.google.com/macros/s/AKfycbxJtZiudCwk7nJ13eNqNMRI-ONuEIJ4MW8WWVcE-Xj16vUvaE68R8OVdnwu9eoLMZKjEQ/exec" target="_blank" rel="noopener">予約ページを試す</a>
+              <a class="btn" href="https://docs.google.com/spreadsheets/d/17pULZP6AJhBsBwpyBM13qd0K-wZwpEjXDkPmt0vrH14/edit" target="_blank" rel="noopener">見本のスプレッドシート</a>
+            </div>
+          </div>
+          <div class="shots">
+            <svg class="deco sprig" aria-hidden="true"><use href="#sprig" width="54" height="108"/></svg>
+            <figure class="shot"><img src="img/reserve.png" alt="予約ページ。ヘッドスパを選ぶと30分ごとの開始時間が並び、予約済みの15:00は線で消されている" width="683" height="581" loading="lazy"><figcaption>予約ページ。埋まっている時間は選べません</figcaption></figure>
+          </div>
+        </article>
+
+        <article class="work">
+          <div class="work-text">
+            <p class="who"><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#flower"/></svg>物販・EC・卸</p>
+            <h3>在庫・商品管理とスマホ入出庫</h3>
+            <div class="block"><h4>悩み</h4><p>複数のECと在庫表がつながっておらず、更新漏れが起きる。JANがある商品とない商品、中古品が混ざっている。</p></div>
+            <div class="block"><h4>できること</h4><ul>
+              <li>新品（JANあり・なし）と古物を1つのスプレッドシートで管理。古物台帳つき</li>
+              <li>スマホでバーコードを読んで入荷・出荷を登録すると、在庫が自動で変わる</li>
+              <li>在庫切れは赤、要発注は黄色で表示。原価から在庫評価額も自動計算</li>
+            </ul></div>
+            <div class="block effect"><h4>効果</h4><p>在庫の正しい数が1か所でわかり、ECの更新漏れや二重販売を防ぐ。自社の物販会社で実際に使っています。</p></div>
+            <div class="block risk"><h4>導入しないと</h4><p>更新漏れによる売り越しや在庫切れが起き、お客様の信用を落としかねない。</p></div>
+            <div class="links">
+              <a class="btn fill" href="https://script.google.com/macros/s/AKfycbxaBinVgJFp8NDhhWTwTfzExLh9Scyv5kpsJLz4JgjSiB4VLri3sV4Yj2AUvgS9lC1N/exec" target="_blank" rel="noopener">入出庫フォームを試す</a>
+              <a class="btn" href="https://docs.google.com/spreadsheets/d/1OzoQVvSUHs73V2NXc1ddjAeebcDSakHPa2v87WVg_Sk/edit" target="_blank" rel="noopener">見本のスプレッドシート</a>
+            </div>
+          </div>
+          <div class="shots duo">
+            <svg class="deco sprig" aria-hidden="true"><use href="#sprig" width="54" height="108"/></svg>
+            <figure class="shot"><img src="img/stock-sheet.png" alt="在庫シート。商品ごとの現在庫と状態（OK・要発注・在庫切れ）、在庫評価額" width="1500" height="240" loading="lazy"><figcaption>在庫シート。状態が色でわかる</figcaption></figure>
+            <figure class="shot"><img src="img/stock-form.png" alt="スマホ用の入出庫フォーム。商品の読み取りボタン、区分、数量の入力欄" width="656" height="775" loading="lazy"><figcaption>スマホの入出庫フォーム</figcaption></figure>
+          </div>
+        </article>
+
+        <article class="work">
+          <div class="work-text">
+            <p class="who"><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#flower"/></svg>SNS運用代行・店舗</p>
+            <h3>SNS運用 月次レポート自動作成</h3>
+            <div class="block"><h4>悩み</h4><p>クライアントへの月次レポート作りに、1社あたり何時間もかかる。担当者によって質がばらつく。</p></div>
+            <div class="block"><h4>できること</h4><ul>
+              <li>Instagramの投稿データからKPI・投稿タイプ別の集計・反応が良かった投稿TOP3・グラフを自動作成</li>
+              <li>AIが「伸びた理由」「課題」「来月の施策」を文章で作成</li>
+              <li>クライアントに出すスライドとPDFをボタン1つで作成</li>
+            </ul></div>
+            <div class="block effect"><h4>効果</h4><p>レポート作成の目安を2〜3時間から約10分に。質のばらつきもなくなる。</p></div>
+            <div class="block risk"><h4>導入しないと</h4><p>担当社数が増えるほどレポート作業に追われ、本来の運用や提案に時間を使えない。</p></div>
+            <div class="links"><a class="btn" href="https://docs.google.com/spreadsheets/d/1pHuNxTUU0ZF5f_gqHtFJcqUTOjpOC8CUkApUfk5qBNs/edit" target="_blank" rel="noopener">見本のスプレッドシート</a></div>
+          </div>
+          <div class="shots">
+            <svg class="deco sprig" aria-hidden="true"><use href="#sprig" width="54" height="108"/></svg>
+            <figure class="shot"><img src="img/sns.png" alt="Instagram月次レポートのダッシュボード。投稿数やリーチの集計、投稿タイプ別のグラフ、AI分析コメント" width="1568" height="520" loading="lazy"><figcaption>自動で作られる月次レポートのダッシュボード</figcaption></figure>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><span class="en">Accounting</span><h2>経理業務もおまかせください</h2></div>
+      <div class="acct">
+        <div>
+          <p class="intro">ホテルの経理補助と、物販会社・ペット事業の経理と決算準備（税理士さんへ提出する資料のとりまとめなど）を続けてきました。会計ソフトへの入力から決算の準備まで、「早く・正確に」進めるお手伝いをします。</p>
+          <ul class="menu-list">
+            <li><b>記帳・入力のサポート</b><span>会計ソフト（弥生会計など）への入力、通帳や請求書からの取り込み用データ（CSV）の作成</span></li>
+            <li><b>入力ミスのチェック</b><span>仕訳の重複・金額の違い・残高のずれを洗い出し、直す箇所を一覧にします</span></li>
+            <li><b>決算準備</b><span>作業の段取り表づくり、棚卸表の作成、税理士さんへ渡す資料と確認事項の整理</span></li>
+            <li><b>毎月の集計の自動化</b><span>売上・経費・在庫の集計を、スプレッドシートで自動化</span></li>
+          </ul>
+          <ul class="career">
+            <li>ホテルの経理補助</li><li>物販会社の経理・決算準備</li><li>ペット事業の経理・決算準備</li>
+          </ul>
+          <div class="soft">
+            <h3>使える会計ソフト</h3>
+            <ul>
+              <li><b>弥生会計</b><span>入力・CSV取り込み・決算準備</span></li>
+              <li><b>マネーフォワード クラウド</b><span>入力・CSV取り込み・入力ミスのチェック</span></li>
+              <li><b>freee会計</b><span>取引の登録・入力ミスのチェック・決算準備</span></li>
+            </ul>
+          </div>
+          <p class="note">※税務申告や税務書類の作成は、顧問の税理士さんにお願いする形になります。その前の準備を整えるお手伝いです。</p>
+        </div>
+        <div class="case">
+          <svg class="deco flower" aria-hidden="true"><use href="#flower" width="40" height="40"/></svg>
+          <p class="tag">実績｜自社の物販会社の決算準備</p>
+          <h3>昨年より早く・正確に</h3>
+          <ol>
+            <li>決算までの作業工程をリストアップし、やることと順番を見える化</li>
+            <li>会計データと前年の決算書を突き合わせ、期首残高のずれを発見</li>
+            <li>修正が必要な仕訳を一覧にし、CSVでまとめて会計ソフトに取り込み</li>
+            <li>棚卸表を作り直し、税理士さんへの確認事項をまとめて送付</li>
+          </ol>
+          <p class="result">手作業での入力と見直しが減り、昨年より効率も精度も上がりました。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><span class="en">About</span><h2>自己紹介</h2></div>
+      <div class="about">
+        <div class="about-mark" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <use href="#sprig" x="22" y="6" width="44" height="88"/>
+            <use href="#flower" x="52" y="52" width="34" height="34"/>
+            <use href="#flower-w" x="14" y="62" width="24" height="24"/>
+          </svg>
+        </div>
+        <div>
+          <p class="myname">櫻 梓</p>
+          <p>ホテルの事務と経理補助、SNS広告運用の会社と、卸・小売の物販会社の経営をしています。自分の会社の在庫管理や月次レポートで手作業に追われた経験から、Googleスプレッドシートとプログラム（Google Apps Script）、AIを使った業務の自動化に取り組んでいます。現場で使う人の目線で、「明日から使える」形にすることを大切にしています。</p>
+          <ul class="tags">
+            <li>Googleスプレッドシート</li><li>Google Apps Script</li><li>Googleカレンダー連動</li><li>スマホ用の入力フォーム</li><li>AIによる文章・分析（Gemini）</li><li>スライド・PDFの自動作成</li><li>経理・事務の効率化</li><li>SNS運用・広告</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><span class="en">Flow</span><h2>ご依頼の流れ</h2></div>
+      <ol class="flow">
+        <li><h3>お話を聞く</h3><p>今の作業と、表には出にくい悩みまで伺います（オンライン30分）。</p></li>
+        <li><h3>見本をつくる</h3><p>実際の画面で動く見本を作り、使い方を確かめていただきます。</p></li>
+        <li><h3>仕上げて納品</h3><p>お店のデータで仕上げ、使い方の説明書をお渡しします。</p></li>
+        <li><h3>使いながら調整</h3><p>使い始めてからの小さな直しにも対応します。</p></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="contact">
+  <svg class="deco sprig" aria-hidden="true"><g class="sway"><use href="#sprig" width="80" height="160"/></g></svg>
+  <svg class="deco flower" aria-hidden="true"><use href="#flower-w" width="46" height="46"/></svg>
+  <div class="wrap">
+    <div class="sec-head"><span class="en">Contact</span><h2>お問い合わせ</h2></div>
+    <p>「これ、うちでもできる？」という段階からお気軽にどうぞ。</p>
+    <dl>
+      <dt>名前</dt><dd>櫻 梓</dd>
+      <dt>Instagram</dt><dd><a href="https://www.instagram.com/office_sakura_a/" target="_blank" rel="noopener">@office_sakura_a</a></dd>
+      <dt>公式LINE</dt><dd><a href="https://line.me/R/ti/p/@025pcbap" target="_blank" rel="noopener">@025pcbap</a>（友だち追加して、トークでご相談ください）</dd>
+      <dt>料金</dt><dd>30,000円〜（ご希望の内容によって変わります。まずはお気軽にご相談ください）</dd>
+    </dl>
+    <p class="monitor">モニタークライアント募集中</p>
+    <p class="small">掲載している作品は見本です。店名・人物・数字はすべて架空のものです。</p>
+  </div>
+</footer>
+</body>
+</html>
